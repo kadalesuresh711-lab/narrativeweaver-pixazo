@@ -16,12 +16,14 @@ const IMAGE_REQUEST_TIMEOUT_MS = 1_800_000;
  * unwanted media such as photography or pencil sketches can make Flux draw them.
  */
 export const STYLE =
-  "FIXED VISUAL STYLE: one single full-colour comic book panel, printed comic panel artwork inside one clean rectangular " +
-  "panel frame with a bold black border, heavy inked comic linework with dramatic hatching, ben-day dot and halftone " +
-  "comic shading, deep cross-hatched shadows, explosive glowing energy and aura effects, comic motion speed lines on " +
-  "action, expressive comic character faces, consistent character proportions, intensely saturated comic-print colours " +
-  "with glowing light, dynamic comic panel composition and camera angle, richly detailed painted background inside the " +
-  "panel, sharp finished comic panel illustration";
+  "FIXED VISUAL STYLE: one single 1990s Western superhero comic book panel, classic American printed comic art inside " +
+  "one clean rectangular panel frame with a bold black border, thick confident black brush inking with tapering line " +
+  "weight, heavy blacks and dense cross-hatching, sharp angular chiselled anatomy with exaggerated heroic musculature, " +
+  "hard-edged cel-like colour blocking with strong teal-and-warm-flesh colour holds, airbrushed colour gradients and " +
+  "ben-day halftone dot shading, glossy specular highlights on skin and metal, dramatic low-angle heroic composition, " +
+  "intense expressive faces with strong shadow across the eyes, comic motion speed lines on action, richly inked " +
+  "detailed background inside the panel, sharp finished vintage comic-book plate illustration";
+
 
 /**
  * The single authoritative light statement for every panel: natural, faithful
@@ -1617,7 +1619,8 @@ function clip(s: string, max: number): string {
  * without ever naming faces or eyes as things to draw.
  */
 const STYLE_LEAD =
-  "one single full-colour comic book panel showing";
+  "one single 1990s Western superhero comic book panel showing";
+
 
 /**
  * The fixed look. This is appended AFTER the scene has been trimmed, never
@@ -1631,8 +1634,10 @@ const STYLE_LEAD =
  * being used for.
  */
 const STYLE_TAIL =
-  "comic panel style, bold inked comic art, clean black comic linework, halftone ben-day shading, " +
-  "saturated comic-print colours, dramatic lighting, detailed background, consistent comic panel style";
+  "1990s American comic book plate style, thick black brush inking, heavy blacks and cross-hatching, angular " +
+  "chiselled anatomy, hard cel colour blocking with teal and warm flesh colour holds, ben-day halftone shading, " +
+  "glossy highlights, dramatic lighting, inked detailed background, consistent vintage comic panel style";
+
 
 /**
  * Single-panel guard. The look is now explicitly a comic PANEL, so this states
