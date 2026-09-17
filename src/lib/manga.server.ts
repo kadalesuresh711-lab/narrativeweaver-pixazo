@@ -3,7 +3,14 @@ import { withImageKey } from "./keys.server";
 import { textChat } from "./text-engine.server";
 import { assertActive, killableSignal, KilledError } from "./kill-switch.server";
 
-const PIXAZO_URL = "https://gateway.pixazo.ai/flux-1-schnell/v1/getData";
+/** Stable Diffusion 3.5 Large — the panel renderer. */
+const SD35_URL = "https://gateway.pixazo.ai/sd3-5/v1/r-sd-3-5-large";
+/**
+ * Free-tier renderer kept only as a safety net: SD 3.5 is a paid model on the
+ * Pixazo gateway, so a key with no balance answers "The balance is
+ * insufficient..." and panels would otherwise never render at all.
+ */
+const FALLBACK_URL = "https://gateway.pixazo.ai/flux-1-schnell/v1/getData";
 // Generation can legitimately take minutes when the renderer is busy. A short
 // deadline used to kill healthy renders at 60s and made long runs look stuck,
 // so this is only a very generous safety net, never a fast-fail.
