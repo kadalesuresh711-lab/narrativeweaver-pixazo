@@ -1183,6 +1183,14 @@ const STYLE_TRIGGERS: [RegExp, string][] = [
     /\b(shallow depth of field|depth of field|telephoto|wide[- ]angle lens|macro lens|studio lighting|softbox|golden hour photo|candid|documentary|editorial|portrait photo|headshot|skin pores|subsurface scattering|ray[- ]?traced|volumetric lighting|lens flare|chromatic aberration|motion blur|long exposure|real[- ]life|true colour photo)\b,?\s*/gi,
     "",
   ],
+  // Close-up framing of any kind is forbidden: the writing model is told to use
+  // medium/wide shots, but it still slips a "close-up of his face" in now and
+  // then, which Flux renders as a face-only portrait. Strip every variant and
+  // leave the surrounding action intact.
+  [
+    /\b(extreme[- ]?close[- ]?up|extreme close up|close[- ]?up|close up|tight[- ]?shot|tight shot|face[- ]?only|face only|head[- ]?shot|headshot|head shot|macro shot|insert shot|detail shot|reaction shot|pinup|pin-up|portrait|bust shot)\b(?:\s+(?:of|on|showing|of the|of a|of an)\s+[^,.]{0,60})?/gi,
+    "medium shot",
+  ],
 ];
 
 /** Removes phrasing that makes the model draw a sheet/portrait, text, or a dark mood grade. */
@@ -1710,7 +1718,7 @@ const STAGING_GUARD =
  * torso filling the frame, so the safe area is stated positively.
  */
 const FRAMING_GUARD =
-  "full-body figures with clear space around them, whole heads inside the frame";
+  "medium shot, full-body figures with clear space around them, whole heads and torsos inside the frame, never a close-up";
 
 /** Environment requirement — a scene, never a floating figure on blank paper. */
 const BACKGROUND_GUARD =
