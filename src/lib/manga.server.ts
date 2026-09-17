@@ -257,8 +257,10 @@ const PROMPT_SYSTEM =
   "EVERY prompt must contain, in this order: (1) the place/setting the line itself describes, (2) who or what is in " +
   "frame — with bible traits woven inline ONLY for characters the line itself is about; if the line involves no person, " +
   "the shot has no people at all, (3) the exact action, body pose and facial expression, (4) 4-6 concrete environmental " +
-  "details, (5) the camera angle and shot size (extreme close-up / close-up / medium / wide / low angle / high angle / " +
-  "over-the-shoulder), (6) the natural lighting and colour the line implies.\n" +
+  "details, (5) the camera angle and shot size — ALWAYS a medium shot or wide shot that shows the full body or at least " +
+  "waist-up of every person with their surroundings; NEVER a close-up, extreme close-up, tight shot, face-only shot or " +
+  "headshot; low angle / high angle / over-the-shoulder are allowed only when they keep the whole body in frame, " +
+  "(6) the natural lighting and colour the line implies.\n" +
   "RULES:\n" +
   "- LEAD CHARACTER AGE (absolute): the FIRST character in the bible is the main protagonist. He is always a clearly " +
   "adult, unmarried 23-year-old young man. Repeat that exact age and adult status whenever he appears; never call or " +
@@ -361,14 +363,15 @@ const PROMPT_SYSTEM =
   "with writing, labels or logos. Show the OBJECT and the reaction instead, never the writing.\n" +
   "- SHORT / NEARLY EMPTY LINES (critical): some lines are very short — a shout, a name, one word, a reaction, or a " +
   "silent beat with almost no words. Such a line has NO new setting of its own, so you MUST hold the SAME place, the " +
-  "SAME people and the SAME time of day as the surrounding lines, and only change the camera (a closer angle, a " +
-  "reaction close-up, a detail of the same scene) or the person's expression. NEVER invent a new location, new " +
-  "characters, a new era or an unrelated event for a short line, and never jump to a scene the script does not have. " +
-  "When such a line is marked with CONTEXT below, take its place and people from that context verbatim.\n" +
+  "SAME people and the SAME time of day as the surrounding lines, and only change the camera (a different medium or " +
+  "wide angle of the same scene) or the person's expression — NEVER a close-up, extreme close-up or face-only shot. " +
+  "NEVER invent a new location, new characters, a new era or an unrelated event for a short line, and never jump to a " +
+  "scene the script does not have. When such a line is marked with CONTEXT below, take its place and people from that " +
+  "context verbatim.\n" +
   "- 42 to 58 words each — put the exact visible action, named cast and place in the FIRST sentence. Keep every word visual and load-bearing. English only. The image engine gives the beginning much more weight, so never open with mood, history or explanation.\n" +
   "OUTPUT FORMAT (strict about the shape, nothing else): one plain line per requested script line, each starting with " +
   "that script line's own number, then ') ', then the whole prompt on that same single line. Example:\n" +
-  "37) In the sunlit courtyard, Henan, a male 17-year-old boy ...\n38) Close-up of ...\n" +
+  "37) In the sunlit courtyard, Henan, a male 23-year-old young man ...\n38) In the same courtyard, Henan turns ...\n" +
   "No JSON, no quotes, no brackets, no bullets, no headings, no blank lines, and never break one prompt across lines.";
 
 /** Hard ceiling for one published text request; larger payloads can sit idle at the edge. */
@@ -1180,6 +1183,14 @@ const STYLE_TRIGGERS: [RegExp, string][] = [
     /\b(shallow depth of field|depth of field|telephoto|wide[- ]angle lens|macro lens|studio lighting|softbox|golden hour photo|candid|documentary|editorial|portrait photo|headshot|skin pores|subsurface scattering|ray[- ]?traced|volumetric lighting|lens flare|chromatic aberration|motion blur|long exposure|real[- ]life|true colour photo)\b,?\s*/gi,
     "",
   ],
+  // Close-up framing of any kind is forbidden: the writing model is told to use
+  // medium/wide shots, but it still slips a "close-up of his face" in now and
+  // then, which Flux renders as a face-only portrait. Strip every variant and
+  // leave the surrounding action intact.
+  [
+    /\b(extreme[- ]?close[- ]?up|extreme close up|close[- ]?up|close up|tight[- ]?shot|tight shot|face[- ]?only|face only|head[- ]?shot|headshot|head shot|macro shot|insert shot|detail shot|reaction shot|pinup|pin-up|portrait|bust shot)\b(?:\s+(?:of|on|showing|of the|of a|of an)\s+[^,.]{0,60})?/gi,
+    "medium shot",
+  ],
 ];
 
 /** Removes phrasing that makes the model draw a sheet/portrait, text, or a dark mood grade. */
@@ -1707,7 +1718,7 @@ const STAGING_GUARD =
  * torso filling the frame, so the safe area is stated positively.
  */
 const FRAMING_GUARD =
-  "full-body figures with clear space around them, whole heads inside the frame";
+  "medium shot, full-body figures with clear space around them, whole heads and torsos inside the frame, never a close-up";
 
 /** Environment requirement — a scene, never a floating figure on blank paper. */
 const BACKGROUND_GUARD =
