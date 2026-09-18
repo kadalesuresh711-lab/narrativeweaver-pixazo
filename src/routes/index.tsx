@@ -100,25 +100,23 @@ const SAMPLE = `(0:00)Henan की कहानी असुरा का उद
 /* ------------------------------------------------------------------ */
 
 /**
- * NO PROMPT BATCHES. One timestamp = one writing request = one image.
+ * Fifteen consecutive timestamps are written in each request.
  *
  * The writer still receives the whole script (so continuity holds), but it is
- * asked for a single timestamp at a time, which lets each prompt carry maximum
- * detail. The moment a prompt lands it is queued for drawing — the run never
- * waits for all prompts to be written first.
+ * asked for a bounded neighbouring range so one response creates fifteen
+ * scene descriptions. Each completed batch is queued for drawing immediately.
  */
-const PROMPT_RANGE = 1;
+const PROMPT_RANGE = 15;
 
 
 
 
 /**
- * Image pipeline shape: TEN Pixazo keys, two images per key at a time (20 slots
- * server-side). Each lane draws ONE prompt with its exact text, so lanes are
- * kept modest and 2-3 people can run the service simultaneously without
- * starving each other's keys.
+ * Image pipeline shape: TEN Pixazo keys and ten client lanes. Each lane draws
+ * one prompt with its exact text, and the server distributes consecutive slots
+ * across all ten keys so a full queue renders ten panels in parallel.
  */
-const IMAGE_CONCURRENCY = 6;
+const IMAGE_CONCURRENCY = 10;
 const IMAGE_BATCH = 1;
 /**
  * The server already downloads and validates every finished image (complete
@@ -144,7 +142,7 @@ function scriptKey(script: string): string {
   // Bump whenever prompt semantics change. Without this, IndexedDB restores old
   // bad prompts and images for the same script, making a quality fix appear to
   // have done nothing even after starting generation again.
-  return `manga:q3:${script.length}:${h}`;
+  return `manga:q4:${script.length}:${h}`;
 }
 
 type Saved = SavedRun<Shot>;
@@ -592,9 +590,9 @@ function Index() {
       // because the text engine uses a single key at a time.
       // Stage 2 drains a shared queue as soon as prompts land. Prompt requests
       // use a heartbeat stream, so the published connection stays active while
-      // Z.ai writes each full 120-line answer.
+      // Z.ai writes each 15-line answer.
       const needPrompts = pending.filter((s) => !hasPrompt(s.prompt));
-      // Batches follow the TIMESTAMPS themselves: PROMPT_RANGE (20) consecutive
+      // Batches follow the TIMESTAMPS themselves: PROMPT_RANGE (15) consecutive
       // timestamps per pass, never scattered line numbers spanning a wide range.
       // A group of neighbouring timestamps keeps the writer inside one
       // continuous scene, which keeps each picture faithful to its own moment.

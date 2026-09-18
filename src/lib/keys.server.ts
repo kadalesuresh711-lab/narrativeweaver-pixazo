@@ -1,8 +1,8 @@
 /**
  * API key pools.
  *
- * Image keys (Pixazo) are used in parallel — THREE renders per key at once, so
- * ten keys give thirty images in parallel and never more. The text key (Z.ai AI)
+ * Image keys (Pixazo) are used in parallel — one render per key at once, so
+ * ten keys give ten images in parallel and never more. The text key (Z.ai AI)
  * is read directly from the environment in zai.server.ts.
  */
 
@@ -38,14 +38,14 @@ export function pickKey(keys: string[], slot: number, attempt = 0): string {
 }
 
 /* ------------------------------------------------------------------ */
-/* Ten images per key at a time                                        */
+/* One image per key at a time                                        */
 /* ------------------------------------------------------------------ */
 
 /**
  * Keep provider load conservative. Saturating a free image key with ten
  * simultaneous renders caused throttling and inconsistent upstream results.
  */
-export const PER_KEY_CONCURRENCY = 2;
+export const PER_KEY_CONCURRENCY = 1;
 
 /** In-flight renders per key. */
 const inFlight = new Map<string, number>();
@@ -72,7 +72,7 @@ function takeFree(keys: string[], slot: number, attempt: number): string | undef
 /**
  * Leases capacity on an image key for the duration of `fn`. Each key handles up
  * to PER_KEY_CONCURRENCY renders at once, so with ten keys configured up to
- * one hundred images are generated in parallel; anything beyond that waits.
+ * ten images are generated in parallel; anything beyond that waits.
  */
 export async function withImageKey<T>(
   slot: number,
