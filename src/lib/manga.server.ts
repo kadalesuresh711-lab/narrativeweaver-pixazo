@@ -1160,7 +1160,7 @@ const DARK_TRIGGERS: [RegExp, string][] = [
  * The written prompt must describe CONTENT ONLY. Any medium/style/genre word
  * the writing model slips in (realistic, photo, 3D render, oil painting, and
  * even "anime"/"manga" themselves) is deleted here, so the ONLY style
- * statement that ever reaches the renderer is the fixed anime block added in
+ * statement that ever reaches the renderer is the fixed American print-comic block added in
  * composeImagePrompt.
  */
 const STYLE_TRIGGERS: [RegExp, string][] = [
@@ -1201,7 +1201,7 @@ export function sanitizePrompt(p: string): string {
     )
     .replace(
       /\b(black[- ]and[- ]white|black ?& ?white|monochrome|monochromatic|gr[ae]yscale|sepia|screentone|halftone|ink wash only)\b/gi,
-      "full colour",
+      "restrained flat print colours",
     );
   for (const [re, to] of TEXT_TRIGGERS) out = out.replace(re, to);
   for (const [re, to] of METAPHOR_TRIGGERS) out = out.replace(re, to);
@@ -1991,7 +1991,7 @@ export function promptVariant(prompt: string, level: number, _line?: string): st
  */
 export function correctiveVariant(prompt: string, reason: string): string {
   const fixes: Record<string, string> = {
-    sketch: "fully finished, clean and polished production artwork with flat cel colour fills",
+    sketch: "fully finished production artwork with matte flat print-ink fills",
     sheet: "a single continuous story moment inside one real location, one appearance of each person",
     no_background:
       "a fully painted location filling the entire background with depth, furniture, props and scenery",
