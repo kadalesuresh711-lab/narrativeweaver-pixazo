@@ -16,13 +16,12 @@ const IMAGE_REQUEST_TIMEOUT_MS = 1_800_000;
  * unwanted media such as photography or pencil sketches can make Flux draw them.
  */
 export const STYLE =
-  "FIXED VISUAL STYLE: one single 1990s Western superhero comic book panel, classic American printed comic art inside " +
-  "one clean rectangular panel frame with a bold black border, thick confident black brush inking with tapering line " +
-  "weight, heavy blacks and dense cross-hatching, sharp angular chiselled anatomy with exaggerated heroic musculature, " +
-  "hard-edged cel-like colour blocking with strong teal-and-warm-flesh colour holds, airbrushed colour gradients and " +
-  "ben-day halftone dot shading, glossy specular highlights on skin and metal, dramatic low-angle heroic composition, " +
-  "intense expressive faces with strong shadow across the eyes, comic motion speed lines on action, richly inked " +
-  "detailed background inside the panel, sharp finished vintage comic-book plate illustration";
+  "FIXED VISUAL STYLE: one single 1990s American printed comic-book story panel inside one clean rectangular frame " +
+  "with a bold black border, forceful hand-inked contour lines with varied brush weight, large solid black shadow shapes, " +
+  "dense cross-hatching and coarse ben-day dots, grounded Western-comic anatomy and expressive body language, matte flat " +
+  "CMYK ink separations on slightly off-white newsprint, a restrained six-colour palette of faded crimson, mustard, " +
+  "forest green, dusty blue, warm skin tones and black, minimal white highlights, crisp foreground silhouettes and a " +
+  "fully inked story-specific background, authentic vintage American sequential comic art";
 
 
 /**
@@ -1161,7 +1160,7 @@ const DARK_TRIGGERS: [RegExp, string][] = [
  * The written prompt must describe CONTENT ONLY. Any medium/style/genre word
  * the writing model slips in (realistic, photo, 3D render, oil painting, and
  * even "anime"/"manga" themselves) is deleted here, so the ONLY style
- * statement that ever reaches the renderer is the fixed anime block added in
+ * statement that ever reaches the renderer is the fixed American print-comic block added in
  * composeImagePrompt.
  */
 const STYLE_TRIGGERS: [RegExp, string][] = [
@@ -1202,7 +1201,7 @@ export function sanitizePrompt(p: string): string {
     )
     .replace(
       /\b(black[- ]and[- ]white|black ?& ?white|monochrome|monochromatic|gr[ae]yscale|sepia|screentone|halftone|ink wash only)\b/gi,
-      "full colour",
+      "restrained flat print colours",
     );
   for (const [re, to] of TEXT_TRIGGERS) out = out.replace(re, to);
   for (const [re, to] of METAPHOR_TRIGGERS) out = out.replace(re, to);
@@ -1630,7 +1629,7 @@ function clip(s: string, max: number): string {
  * without ever naming faces or eyes as things to draw.
  */
 const STYLE_LEAD =
-  "one single 1990s Western superhero comic book panel showing";
+  "one single 1990s American printed comic-book story panel showing";
 
 
 /**
@@ -1645,9 +1644,10 @@ const STYLE_LEAD =
  * being used for.
  */
 const STYLE_TAIL =
-  "1990s American comic book plate style, thick black brush inking, heavy blacks and cross-hatching, angular " +
-  "chiselled anatomy, hard cel colour blocking with teal and warm flesh colour holds, ben-day halftone shading, " +
-  "glossy highlights, dramatic lighting, inked detailed background, consistent vintage comic panel style";
+  "authentic 1990s American print-comic artwork, forceful varied black brush lines, large solid black shadow shapes, " +
+  "dense cross-hatching, coarse ben-day dots, grounded Western-comic anatomy, matte flat CMYK ink separations on " +
+  "off-white newsprint, restrained faded crimson mustard forest-green dusty-blue and warm-skin palette, minimal white " +
+  "highlights, fully inked detailed background, consistent vintage sequential comic panel style";
 
 
 /**
@@ -1991,7 +1991,7 @@ export function promptVariant(prompt: string, level: number, _line?: string): st
  */
 export function correctiveVariant(prompt: string, reason: string): string {
   const fixes: Record<string, string> = {
-    sketch: "fully finished, clean and polished production artwork with flat cel colour fills",
+    sketch: "fully finished production artwork with matte flat print-ink fills",
     sheet: "a single continuous story moment inside one real location, one appearance of each person",
     no_background:
       "a fully painted location filling the entire background with depth, furniture, props and scenery",

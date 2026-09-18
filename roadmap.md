@@ -22,10 +22,12 @@
 ## Rebuild in this project (Sep 2026)
 - [x] Project code brought in and dependencies installed
 - [x] All 10 Pixazo keys + Z.ai key stored as encrypted secrets (server-only)
-- [x] Prompt batching removed: one writing request per timestamp, whole script
-      as context, larger detail budget per prompt
-- [x] Each image starts rendering the instant its own prompt lands (writing and
-      drawing run together, no waiting for the full prompt list)
+- [x] Prompt generation uses consecutive batches of 15 timestamps, with whole-script
+      continuity context and missing prompts retried in batches of up to 15
+- [x] Each 15-prompt batch starts drawing as soon as it lands (writing and drawing
+      run together, with no wait for the full prompt list)
 - [x] Explicit fighting / magic / ability / battlefield detail rule in the writer
-- [x] Lanes tuned (6 per user, 2 per key over 10 keys) so 2-3 people can run
-      the service at the same time
+- [x] Ten drawing lanes distributed across all 10 Pixazo keys, one active image
+      per key, for ten-way parallel generation without overloading a key
+- [x] Restrained 1990s American print-comic palette with matte CMYK inks, heavy
+      black brushwork, cross-hatching and ben-day dots instead of anime colour
